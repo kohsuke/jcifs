@@ -1,0 +1,91 @@
+diff -r temp/jcifs_1.2.13/src/jcifs/smb/SecurityDescriptor.java workspace/jcifs/src/jcifs/smb/SecurityDescriptor.java
+24a25
+>     SID owner_user, owner_group;
+38c39
+<         ServerMessageBlock.readInt4(buffer, bufferIndex); // offset to owner sid
+---
+>         int ownerUOffset = ServerMessageBlock.readInt4(buffer, bufferIndex); // offset to owner sid
+40c41
+<         ServerMessageBlock.readInt4(buffer, bufferIndex); // offset to group sid
+---
+>         int ownerGOffset = ServerMessageBlock.readInt4(buffer, bufferIndex); // offset to group sid
+42c43
+<         ServerMessageBlock.readInt4(buffer, bufferIndex); // offset to sacl
+---
+>         int saclOffset = ServerMessageBlock.readInt4(buffer, bufferIndex); // offset to sacl
+48,56c49,70
+<         bufferIndex++; // revision
+<         bufferIndex++;
+<         int size = ServerMessageBlock.readInt2(buffer, bufferIndex);
+<         bufferIndex += 2;
+<         int numAces = ServerMessageBlock.readInt4(buffer, bufferIndex);
+<         bufferIndex += 4;
+< 
+<         if (numAces > 4096)
+<             throw new RuntimeException( "Invalid SecurityDescriptor" );
+---
+>         if ( ownerUOffset > 0 ) {
+>           bufferIndex = start + ownerUOffset;
+>           owner_user = new SID ( buffer, bufferIndex );
+>           bufferIndex += 28; // ???
+>         }
+> 
+>         if ( ownerGOffset > 0 ) {
+>           bufferIndex = start + ownerGOffset;
+>           owner_group = new SID ( buffer, bufferIndex );
+>           bufferIndex += 28; // ???
+>         }
+> 
+>         if ( daclOffset > 0 ) {
+>           bufferIndex++; // revision
+>           bufferIndex++;
+>           int size = ServerMessageBlock.readInt2(buffer, bufferIndex);
+>           bufferIndex += 2;
+>           int numAces = ServerMessageBlock.readInt4(buffer, bufferIndex);
+>           bufferIndex += 4;
+>  
+>           if (numAces > 4096)
+>               throw new RuntimeException( "Invalid SecurityDescriptor" );
+58,59c72,73
+<         aces = new ACE[numAces];
+<         for (int i = 0; i < numAces; i++) {
+---
+>           aces = new ACE[numAces];
+>           for (int i = 0; i < numAces; i++) {
+61a76
+>           }
+63d77
+< 
+Only in workspace/jcifs/src/jcifs/smb: SecurityDescriptor.java~
+diff -r temp/jcifs_1.2.13/src/jcifs/smb/SmbFile.java workspace/jcifs/src/jcifs/smb/SmbFile.java
+2722a2723,2752
+> 
+>     public SID getOwnerUser() throws IOException {
+>       int f = open0( O_RDONLY, READ_CONTROL, 0, isDirectory() ? 1 : 0 );
+> 
+>       /*
+>        * NtTrans Query Security Desc Request / Response
+>        */
+> 
+>       NtTransQuerySecurityDesc request = new NtTransQuerySecurityDesc( f, 0x01 );
+>       NtTransQuerySecurityDescResponse response = new NtTransQuerySecurityDescResponse();
+>       send( request, response );
+> 
+>       close( f, 0L );
+>       return response.securityDescriptor.owner_user;
+>   }
+> 
+>   public SID getOwnerGroup() throws IOException {
+>       int f = open0( O_RDONLY, READ_CONTROL, 0, isDirectory() ? 1 : 0 );
+> 
+>       /*
+>        * NtTrans Query Security Desc Request / Response
+>        */
+> 
+>       NtTransQuerySecurityDesc request = new NtTransQuerySecurityDesc( f, 0x02 );
+>       NtTransQuerySecurityDescResponse response = new NtTransQuerySecurityDescResponse();
+>       send( request, response );
+> 
+>       close( f, 0L );
+>       return response.securityDescriptor.owner_group;
+>   }
