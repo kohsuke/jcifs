@@ -84,7 +84,7 @@ public class SmbFileInputStream extends InputStream {
      * Sets the timeout for read.
      */
     public void setTimeout(long timeout) {
-        timeout = new Long(timeout);
+        this.timeout = new Long(timeout);
     }
 
     protected IOException seToIoe(SmbException se) {
