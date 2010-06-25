@@ -36,6 +36,7 @@ public class SmbFileInputStream extends InputStream {
     private long fp;
     private int readSize, openFlags, access;
     private byte[] tmp = new byte[1];
+    private Long timeout;
 
     SmbFile file;
 
@@ -77,6 +78,13 @@ public class SmbFileInputStream extends InputStream {
         }
         readSize = Math.min( file.tree.session.transport.rcv_buf_size - 70,
                             file.tree.session.transport.server.maxBufferSize - 70 );
+    }
+
+    /**
+     * Sets the timeout for read.
+     */
+    public void setTimeout(long timeout) {
+        timeout = new Long(timeout);
     }
 
     protected IOException seToIoe(SmbException se) {
@@ -178,6 +186,7 @@ SmbComReadAndX request = new SmbComReadAndX( file.fid, fp, r, null );
 if( file.type == SmbFile.TYPE_NAMED_PIPE ) {
     request.minCount = request.maxCount = request.remaining = 1024;
 }
+                request.timeout = timeout;
                 file.send( request, response );
             } catch( SmbException se ) {
                 if( file.type == SmbFile.TYPE_NAMED_PIPE &&
