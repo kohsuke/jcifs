@@ -634,7 +634,8 @@ public class SmbTransport extends Transport implements SmbConstants {
 
             } else {
                 response.command = request.command;
-                super.sendrecv( request, response, RESPONSE_TIMEOUT );
+                super.sendrecv( request, response,
+                        request.timeout==null ? RESPONSE_TIMEOUT : request.timeout.longValue() );
             }
         } catch( SmbException se ) {
             throw se;

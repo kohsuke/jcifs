@@ -185,6 +185,12 @@ abstract class ServerMessageBlock extends Response implements Request, SmbConsta
     SigningDigest digest = null;
     ServerMessageBlock response;
 
+    /**
+     * Used for the request object to override the timeout.
+     * null to follow the default
+     */
+    public Long timeout;
+
     ServerMessageBlock() {
         flags = (byte)( FLAGS_PATH_NAMES_CASELESS | FLAGS_PATH_NAMES_CANONICALIZED );
         pid = PID;
