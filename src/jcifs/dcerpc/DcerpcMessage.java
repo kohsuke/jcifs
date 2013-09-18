@@ -35,7 +35,7 @@ public abstract class DcerpcMessage extends NdrObject implements DcerpcConstants
         return (flags & flag) == flag;
     }
     public void unsetFlag(int flag) {
-        flags |= flag;
+        flags &= ~flag;
     }
     public void setFlag(int flag) {
         flags |= flag;

@@ -1,6 +1,6 @@
 /* jcifs msrpc client library in Java
  * Copyright (C) 2006  "Michael B. Allen" <jcifs at samba dot org>
- *                     "Eric Glass" <jcifs at samba dot org>
+ *                   "Eric Glass" <jcifs at samba dot org>
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -140,7 +140,7 @@ synchronized (this) {
             bind();
         }
 
-        isDirect = msg instanceof DcerpcBind;
+        isDirect = true;
 
         stub = jcifs.smb.BufferCache.getBuffer();
         try {
@@ -149,7 +149,7 @@ synchronized (this) {
             buf = new NdrBuffer(stub, 0);
 
             msg.flags = DCERPC_FIRST_FRAG | DCERPC_LAST_FRAG;
-            msg.call_id = call_id;
+            msg.call_id = call_id++;
 
             msg.encode(buf);
 
@@ -158,27 +158,36 @@ synchronized (this) {
                 securityProvider.wrap(buf);
             }
 
-            tot = buf.getLength();
+            tot = buf.getLength() - 24;
             off = 0;
 
             while (off < tot) {
-                msg.call_id = call_id++;
+                n = tot - off;
 
-                if ((tot - off) > max_xmit) {
-                    /* Multiple fragments. Need to set flags and length
-                     * and re-encode header
-                    msg.length = n = max_xmit;
+                if ((24 + n) > max_xmit) {
                     msg.flags &= ~DCERPC_LAST_FRAG;
+                    n = max_xmit - 24;
+                } else {
+                    msg.flags |= DCERPC_LAST_FRAG;
+                    isDirect = false;
+                    msg.alloc_hint = n;
+                }
+
+                msg.length = 24 + n;
+
+                if (off > 0)
+                    msg.flags &= ~DCERPC_FIRST_FRAG;
+
+                if ((msg.flags & (DCERPC_FIRST_FRAG | DCERPC_LAST_FRAG)) != (DCERPC_FIRST_FRAG | DCERPC_LAST_FRAG)) {
                     buf.start = off;
                     buf.reset();
                     msg.encode_header(buf);
-                     */
-                    throw new DcerpcException("Fragmented request PDUs currently not supported");
-                } else {
-                    n = tot - off;
+                    buf.enc_ndr_long(msg.alloc_hint);
+                    buf.enc_ndr_short(0); /* context id */
+                    buf.enc_ndr_short(msg.getOpnum());
                 }
 
-                doSendFragment(stub, off, n, isDirect);
+                doSendFragment(stub, off, msg.length, isDirect);
                 off += n;
             }
 

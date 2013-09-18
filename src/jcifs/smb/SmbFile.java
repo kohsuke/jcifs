@@ -358,6 +358,7 @@ public class SmbFile extends URLConnection implements SmbConstants {
 
     static LogStream log = LogStream.getInstance();
     static long attrExpirationPeriod;
+    static boolean ignoreCopyToException;
 
     static {
 
@@ -367,6 +368,7 @@ public class SmbFile extends URLConnection implements SmbConstants {
             cnfe.printStackTrace();
         }
         attrExpirationPeriod = Config.getLong( "jcifs.smb.client.attrExpirationPeriod", DEFAULT_ATTR_EXPIRATION_PERIOD );
+        ignoreCopyToException = Config.getBoolean( "jcifs.smb.client.ignoreCopyToException", true );
         dfs = new Dfs();
     }
 
@@ -661,6 +663,9 @@ public class SmbFile extends URLConnection implements SmbConstants {
         return blank_resp;
     }
     void resolveDfs(ServerMessageBlock request) throws SmbException {
+        if (request instanceof SmbComClose)
+            return;
+
         connect0();
 
         DfsReferral dr = dfs.resolve(
@@ -948,6 +953,8 @@ int addressIndex;
             try {
                 doConnect();
                 return;
+            } catch(SmbAuthException sae) {
+                throw sae; // Prevents account lockout on servers with multiple IPs
             } catch(SmbException se) {
                 if (getNextAddress() == null) 
                     throw se;
@@ -2246,9 +2253,13 @@ if (this instanceof SmbNamedPipe) {
                         dest.fid, attributes, createTime, lastModified ),
                         new Trans2SetFileInformationResponse() );
                 dest.close( 0L );
-            } catch( Exception ex ) {
+            } catch( SmbException se ) {
+
+                if (ignoreCopyToException == false)
+                    throw new SmbException("Failed to copy file from [" + this.toString() + "] to [" + dest.toString() + "]", se);
+
                 if( log.level > 1 )
-                    ex.printStackTrace( log );
+                    se.printStackTrace( log );
             } finally {
                 close();
             }
@@ -2854,7 +2865,7 @@ if (this instanceof SmbNamedPipe) {
                 sids[ai] = aces[ai].sid;
             }
 
-            for (int off = 0; off < sids.length; off += 10) {
+            for (int off = 0; off < sids.length; off += 64) {
                 int len = sids.length - off;
                 if (len > 64)
                     len = 64;

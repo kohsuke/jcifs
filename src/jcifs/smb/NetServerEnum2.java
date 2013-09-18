@@ -27,8 +27,8 @@ class NetServerEnum2 extends SmbComTransaction {
     static final int SV_TYPE_DOMAIN_ENUM = 0x80000000;
 
     static final String[] DESCR = {
+        "WrLehDO\u0000B16BBDz\u0000",
         "WrLehDz\u0000B16BBDz\u0000",
-        "WrLehDzz\u0000B16BBDz\u0000"
     };
 
     String domain, lastName = null;
@@ -42,8 +42,7 @@ class NetServerEnum2 extends SmbComTransaction {
         name = "\\PIPE\\LANMAN";
 
         maxParameterCount = 8;
-//        maxDataCount = 4096; why was this here?
-maxDataCount = 16384;
+        maxDataCount = 16384;
         maxSetupCount = (byte)0x00;
         setupCount = 0;
         timeout = 5000;

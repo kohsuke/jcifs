@@ -15,6 +15,7 @@ interface SmbConstants {
     static final int DEFAULT_RCV_BUF_SIZE = 60416;
     static final int DEFAULT_SND_BUF_SIZE = 16644;
     static final int DEFAULT_SSN_LIMIT = 250;
+    static final int DEFAULT_CONN_TIMEOUT = 35000;
 
     static final InetAddress LADDR = Config.getLocalHost();
     static final int LPORT = Config.getInt( "jcifs.smb.client.lport", 0 );
@@ -152,6 +153,8 @@ interface SmbConstants {
             Config.getInt( "jcifs.smb.client.ssnLimit", DEFAULT_SSN_LIMIT );
     static final int SO_TIMEOUT =
             Config.getInt( "jcifs.smb.client.soTimeout", DEFAULT_SO_TIMEOUT );
+    static final int CONN_TIMEOUT =
+            Config.getInt( "jcifs.smb.client.connTimeout", DEFAULT_CONN_TIMEOUT );
     static final String NATIVE_OS =
             Config.getProperty( "jcifs.smb.client.nativeOs", System.getProperty( "os.name" ));
     static final String NATIVE_LANMAN =

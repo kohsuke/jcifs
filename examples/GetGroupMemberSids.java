@@ -10,10 +10,12 @@ public class GetGroupMemberSids {
         }
 
         SmbFile file = new SmbFile(argv[0]);
-        SID sid = new SID(argv[1]);
-
         String server = file.getServer();
         NtlmPasswordAuthentication auth = (NtlmPasswordAuthentication)file.getPrincipal();
+        SID sid = new SID(argv[1]);
+        sid.resolve(server, auth);
+
+        System.out.println("type=" + sid.getType());
 
         SID[] mems = sid.getGroupMemberSids(server, auth, SID.SID_FLAG_RESOLVE_SIDS);
 

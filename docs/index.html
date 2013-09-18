@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML>
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -77,16 +77,16 @@
 <BODY>
 <TABLE>
 <TR>
-<TD class="mainpane" colspan="2">
+<TD colspan="2" class="mainpane">
 <center>
-<img alt="JCIFS" src="jcifs.png"><H2>The Java CIFS Client Library</H2>
+<img src="jcifs.png" alt="JCIFS"><H2>The Java CIFS Client Library</H2>
 </center>
 <P></P>
 JCIFS is an <a href="http://www.opensource.org/docs/definition_plain.php">Open Source</a> client library that implements the CIFS/SMB networking protocol in 100% Java. CIFS is the standard file sharing protocol on the Microsoft Windows platform (e.g. Map Network Drive ...). This client is used extensively in production on large Intranets.
 </TD>
 </TR>
 <TR>
-<TD class="leftpane" width="350" valign="top">
+<TD valign="top" width="350" class="leftpane">
 <h1>Links</h1>
 <a href="src/">Download</a>
 <br>
@@ -132,7 +132,7 @@ JCIFS is an <a href="http://www.opensource.org/docs/definition_plain.php">Open S
 <br>
 <a href="http://sourceforge.net/projects/davenport/">Davenport - WebDAV to CIFS gateway</a>
 <br>
-<a href="http://sourceforge.net/project/showfiles.php?group_id=143373&package_id=248550">Alfresco JLAN Shared File Drive Interface</a>
+<a href="http://sourceforge.net/project/showfiles.php?group_id=143373&amp;package_id=248550">Alfresco JLAN Shared File Drive Interface</a>
 <br>
 <h2>CIFS Authorities</h2>
 <a href="http://www.samba.org/">http://www.samba.org/</a>
@@ -203,7 +203,7 @@ JCIFS is an <a href="http://www.opensource.org/docs/definition_plain.php">Open S
 <br>
 <a href="http://www.thursby.com/CIFS/">Thursby Software's CIFS pages</a>
 <br>
-<a href="http://www.linux-mag.com/cgi-bin/printer.pl?issue=2001-05&article=smb">Linux Mag: Understanding the Network Neighborhood</a>
+<a href="http://www.linux-mag.com/cgi-bin/printer.pl?issue=2001-05&amp;article=smb">Linux Mag: Understanding the Network Neighborhood</a>
 <br>
 <h2>Other</h2>
 <a href="https://lists.samba.org/listinfo/jcifs">Join the JCIFS Mailing List</a>
@@ -218,8 +218,61 @@ JCIFS is an <a href="http://www.opensource.org/docs/definition_plain.php">Open S
 <br>
 <a href="http://discuss.microsoft.com/archives/cifs.html">Microsoft's CIFS Mailing List Archives</a>
 <br>
-</TD><TD class="middlepane" valign="top">
+</TD><TD valign="top" class="middlepane">
 <h1>News</h1>
+<EM>jcifs-1.3.17 released / SO_TIMEOUT Fixed, Connect Timeout Control Added</EM>
+<BR>
+<SMALL><B>posted by Mike, October 18, 2011</B></SMALL>
+<BR>
+The <code>jcifs.smb.client.soTimeout</code> property, which controls how long the client will wait to read data from a server, was broken in the previous release (1.3.16). Not only was it broken but no SO_TIMEOUT was specified at all meaning if a server became unresponive, JCIFS could hang for an uncontrollably long time. This behavior of this property has been restored.
+<p></p>
+Additionally, a new <code>jcifs.smb.client.connTimeout</code> has been added which specifies the number of milliseconds that the client will wait to connect to a server (how long it will wait for a response to the TCP SYN). This can be very useful when trying to communicate with many servers in parallel.
+<P></P>
+<EM>jcifs-1.3.16 released / SO_TIMEOUT, Disconnect Improvements, copyTo() Exceptions and more</EM>
+<BR>
+<SMALL><B>posted by Mike, June 25, 2011</B></SMALL>
+<BR>
+This release includes the following minor fixes and improvements:
+<ul>
+
+<li>
+JCIFS now uses the InetSocketAddress class to explicitly bind and set the SO_TIMEOUT on client sockets before they are connected. This makes the SO_TIMEOUT effective when the target server socket is not listening and the client OS socket implementation takes a long time for the dropped SYN to timeout. This may significantly reduce resource consumption in applications that use multiple threads to constantly query servers that may not be listening.
+</li>
+<li>
+When disconnecting a transport, new clauses have been added to better reset transport state whereas previously transports could get stuck in a disconnected state for unnecessarily long periods of time.
+</li>
+<li>
+A new property jcifs.smb.client.ignoreCopyToException has been added. When set to "true" (the default), the SmbFile.copyTo() method will ignore (but log) exceptions trying to copy individual files or directories (such as because of a permissions error). To maintain backward compatibility, the default value of this property is "true" (exceptions are ignored). Setting this property to "false" will cause any exception that occurs trying to copy an individual file or directory to be thrown out of copyTo and abort the copy operation at the point of failure. 
+</li>
+<li>
+If an authentication exception occurs trying to connect to a server that has multiple IP addresses, JCIFS will not attempt to connect to more than one IP addresses because doing so could result in an account lockout.
+</li>
+<li>
+The SID resolver code incorrectly resolved SIDs of an ACE in blocks of at most 10 where it should have used a limit of 64. This performance issue has been fixed.
+</li>
+<li>
+JCIFS will not throw the artifical "Access is denied" error if the special NtlmPasswordCredential.ANONYMOUS credential is used explicitly (whereas normally JCIFS will deliberately throw an SmbAuthException if a login results in a guest login or if the anonymous identity is used).
+</li>
+<li>
+The NetrServerEnum2 RAP call used incorrect parameter descriptiors which could result in "SmbException: 2320" errors trying to list domains and servers from the local NetBIOS browse service.
+</li>
+<li>
+The NTLMSSP AUTHENTICATE_MESSAGE (aka "Type 2 Message") encoding routine incorrectly left out the TargetName field (although this had no effect on CIFS client behavior).
+</li>
+
+</ul>
+
+<p></p>
+The JCIFS Team would like to thank IOPLEX Software for contributing to this work.
+<P></P>
+<EM>jcifs-1.3.15 released / Minor DcerpcHandle Locking Adjustments</EM>
+<BR>
+<SMALL><B>posted by Mike, October 7</B></SMALL>
+<BR>
+Minor adjustments have been applied to DcerpcHandle locking routines in the SID class to fix sporadic occurances of "All pipe instances are busy" errors under high load.
+<p></p>
+The JCIFS Team would like to thank <a href="http://vivisimo.com/">Viv&iacute;simo, Inc.</a> for supporting this work. Viv&iacute;simo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Viv&iacute;simo offers Clusty.com.
+<P></P>
 <EM>jcifs-1.3.14 released / NetBIOS Node Status Disabled and Named Pipe Errors</EM>
 <BR>
 <SMALL><B>posted by Mike, February 11, 2010</B></SMALL>
@@ -249,7 +302,7 @@ The United States Department of Commerce Bureau of Industry and Security (BIS) h
 For commercial products that ship JCIFS in binary form, you will need to reference the second ECCN in your export classification requests.
 For further information such as CCATS numbers, please contact ioplex<i style="font-style: normal;">@</i>gmail.com.
 <p></p>
-The JCIFS Team would like to thank BIS for there excellent service and patience.
+The JCIFS Team would like to thank BIS for their excellent service and patience.
 <P></P>
 <EM>jcifs-1.3.12 released / Two NullPointerExceptions Fixed and DFS</EM>
 <BR>
@@ -318,7 +371,7 @@ Share security was broken in both 1.2 and 1.3. It has been fixed. Note that shar
 <BR>
 Stand-alone DFS did not work properly if the hostname used in the SMB URL was an IP address and not a DNS or NetBIOS hostname. This issue has been fixed.
 <p></p>
-The JCIFS Team would like to thank <a href="http://vivisimo.com/">Viv&iacute;simo, Inc.</a> for supporting this work. Viv&iacute;simo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Viv&iacute;simo offers Clusty.com.
+The JCIFS Team would like to thank Viv&iacute;simo, Inc. for supporting this work. Viv&iacute;simo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Viv&iacute;simo offers Clusty.com.
 <P></P>
 <EM>jcifs-1.3.4 released / Parameter Words, Status Codes and Minor Fixes</EM>
 <BR>
@@ -368,7 +421,7 @@ NTLMv2 and NTLMv1 over NTLMSSP has been fairly well tested with and without SMB 
 <p></p>
 Note: The NTLM HTTP Filter does not and can never support NTLMv2 as it uses a main-in-the-middle technique that is broken by NTLMSSP's "target information" used in computing password hashes. However, the existing Filter should continue to work.
 <p></p>
-The JCIFS Team would like to thank <a href="http://www.metacarta.com/">MetaCarta, Inc.</a> for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
+The JCIFS Team would like to thank MetaCarta, Inc. for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
 <P></P>
 <EM>jcifs-1.2.25 released / ArrayIndexOutOfBoundsException, copyTo and IBM iSeries Fixes</EM>
 <BR>
@@ -376,7 +429,7 @@ The JCIFS Team would like to thank <a href="http://www.metacarta.com/">MetaCarta
 <BR>
 An ArrayIndexOutOfBoundsException could occur listing a large number of shares (DCERPC response larger than 65535 bytes). The <tt>copyTo</tt> method could deadlock if the server was disconnected during a copy. The IBM iSeries server can send the NativeFileSystem field in ASCII even though Unicode was negotiated and it requires the '?????' service string (and not 'A:'). These issues have been fixed.
 <p></p>
-The JCIFS Team would like to thank <a href="http://www.metacarta.com/">MetaCarta, Inc.</a> for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
+The JCIFS Team would like to thank MetaCarta, Inc. for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
 <P></P>
 <EM>jcifs-1.2.18 released / DCERPC, Robust Recovery, URL Decoding, NPEs and Much More</EM>
 <BR>
@@ -425,7 +478,7 @@ The SmbSessionSetup constructor will now compare the challenge and encryptionKey
 
 </ul>
 
-The JCIFS Team would like to thank <a href="http://vivisimo.com/">Viv&iacute;simo, Inc.</a> for supporting this work. Viv&iacute;simo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Viv&iacute;simo offers Clusty.com.
+The JCIFS Team would like to thank Viv&iacute;simo, Inc. for supporting this work. Viv&iacute;simo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Viv&iacute;simo offers Clusty.com.
 <p></p>
 The JCIFS Team would like to thank IOPLEX Software for contributing to this work.
 IOPLEX Software has many years of experience with HTTP Single Sign-On, Kerberos, NTLM, Active Directory, MSRPC and related networking protocols.
@@ -449,7 +502,7 @@ With this release, JCIFS now supports domain-based DFS. With domain-based DFS, c
 <p></p>
 Note that these changes are fairly significant. Whenever JCIFS tries to connect to a server this new logic is used. So if anyone notices anything out of the ordinary please report it to the JCIFS mailing list.
 <p></p>
-The JCIFS Team would like to thank <a href="http://www.metacarta.com/">MetaCarta, Inc.</a> for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
+The JCIFS Team would like to thank MetaCarta, Inc. for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
 <P></P>
 <EM>jcifs-1.2.15 released / NetApp Compatibility, SMB signing with DFS and More</EM>
 <BR>
@@ -477,7 +530,7 @@ This release includes some significant changes. Most of these changes are relate
 <p></p>
 The JCIFS Team would like to thank <a href="http://www.simple-groupware.de/">Simple Groupware Solutions</a> and the Leibniz Computing Centre Munich (LRZ) for supporting this work.
 <p></p>
-The JCIFS Team would like to thank <a href="http://vivisimo.com/">Viv&iacute;simo, Inc.</a> for supporting this work. Viv&iacute;simo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Viv&iacute;simo offers Clusty.com.
+The JCIFS Team would like to thank Viv&iacute;simo, Inc. for supporting this work. Viv&iacute;simo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Viv&iacute;simo offers Clusty.com.
 <P></P>
 <EM>jcifs-krb5-1.2.13 released / Kerberos Authentication Support Update</EM>
 <BR>
@@ -492,12 +545,12 @@ Great thanks again to Mr. Shun from Japan for contributing this work.
 </TD>
 </TR>
 <TR>
-<TD class="footer" colspan="2">
-<hr noshade="noshade">
+<TD colspan="2" class="footer">
+<hr noshade>
 <small>
-        Last updated Feb 10, 2010<BR>jcifs-1.3.14<BR>
+        Last updated Oct 18, 2011<BR>jcifs-1.3.17<BR>
         Copyright &copy; 2010 The JCIFS Project<BR>
-<a style="color: black;" href="http://validator.w3.org/check/referer">validate this page</a></small></TD>
+<a href="http://validator.w3.org/check/referer" style="color: black;">validate this page</a></small></TD>
 </TR>
 </TABLE>
 </BODY>

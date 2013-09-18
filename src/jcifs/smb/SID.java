@@ -83,7 +83,7 @@ public class SID extends rpc.sid_t {
         }
     }
 
-    static Map sid_cache = Collections.synchronizedMap(new HashMap());
+    static Map sid_cache = new HashMap();
 
     static void resolveSids(DcerpcHandle handle,
                 LsaPolicyHandle policyHandle,
@@ -126,6 +126,7 @@ public class SID extends rpc.sid_t {
         DcerpcHandle handle = null;
         LsaPolicyHandle policyHandle = null;
 
+synchronized (sid_cache) {
         try {
             handle = DcerpcHandle.getHandle("ncacn_np:" + authorityServerName +
                     "[\\PIPE\\lsarpc]", auth);
@@ -143,6 +144,7 @@ public class SID extends rpc.sid_t {
                 handle.close();
             }
         }
+}
     }
 
     static public void resolveSids(String authorityServerName,
@@ -153,6 +155,7 @@ public class SID extends rpc.sid_t {
         ArrayList list = new ArrayList(sids.length);
         int si;
 
+synchronized (sid_cache) {
         for (si = 0; si < length; si++) {
             SID sid = (SID)sid_cache.get(sids[offset + si]);
             if (sid != null) {
@@ -171,6 +174,7 @@ public class SID extends rpc.sid_t {
                 sid_cache.put(sids[si], sids[si]);
             }
         }
+}
     }
     /**
      * Resolve an array of SIDs using a cache and at most one MSRPC request.
@@ -190,6 +194,7 @@ public class SID extends rpc.sid_t {
         ArrayList list = new ArrayList(sids.length);
         int si;
 
+synchronized (sid_cache) {
         for (si = 0; si < sids.length; si++) {
             SID sid = (SID)sid_cache.get(sids[si]);
             if (sid != null) {
@@ -208,6 +213,7 @@ public class SID extends rpc.sid_t {
                 sid_cache.put(sids[si], sids[si]);
             }
         }
+}
     }
     public static SID getServerSid(String server,
                     NtlmPasswordAuthentication auth) throws IOException {
@@ -216,6 +222,7 @@ public class SID extends rpc.sid_t {
         lsarpc.LsarDomainInfo info = new lsarpc.LsarDomainInfo();
         MsrpcQueryInformationPolicy rpc;
 
+synchronized (sid_cache) {
         try {
             handle = DcerpcHandle.getHandle("ncacn_np:" + server +
                     "[\\PIPE\\lsarpc]", auth);
@@ -241,6 +248,7 @@ public class SID extends rpc.sid_t {
                 handle.close();
             }
         }
+}
     }
     public static byte[] toByteArray(rpc.sid_t sid) {
         byte[] dst = new byte[1 + 1 + 6 + sid.sub_authority_count * 4];
@@ -605,6 +613,7 @@ public class SID extends rpc.sid_t {
         SamrDomainHandle domainHandle = null;
         SID domsid = getDomainSid();
 
+synchronized (sid_cache) {
         try {
             handle = DcerpcHandle.getHandle("ncacn_np:" + authorityServerName +
                     "[\\PIPE\\samr]", auth);
@@ -626,6 +635,7 @@ public class SID extends rpc.sid_t {
                 handle.close();
             }
         }
+}
     }
 
     /**
@@ -660,6 +670,7 @@ public class SID extends rpc.sid_t {
         samr.SamrSamArray sam = new samr.SamrSamArray();
         MsrpcEnumerateAliasesInDomain rpc;
 
+synchronized (sid_cache) {
         try {
             handle = DcerpcHandle.getHandle("ncacn_np:" + authorityServerName +
                     "[\\PIPE\\samr]", auth);
@@ -708,6 +719,7 @@ public class SID extends rpc.sid_t {
                 handle.close();
             }
         }
+}
     }
 }
 
