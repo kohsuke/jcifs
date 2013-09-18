@@ -28,10 +28,6 @@ import jcifs.UniAddress;
 import jcifs.netbios.NbtAddress;
 import jcifs.util.MD4;
 
-/**
- * Update June 2009: This logon method of this class does not and never will support NTLMv2. JCIFS does not implement the acceptor side of NTLM authentication. It can only initiate NTLM authentication as a client.
- */
-
 public final class SmbSession {
 
     private static final String LOGON_SHARE =
@@ -136,8 +132,6 @@ synchronized (DOMAIN) {
  * occurs an <tt>SmbException</tt> will be thrown. If the credentials are
  * valid, the method will return without throwing an exception. See the
  * last <a href="../../../faq.html">FAQ</a> question.
- * <p>
- * Update June 2009: This method does not support NTLMv2. JCIFS does not implement the acceptor side of NTLM authentication. It can only initiate NTLM authentication as a client.
  * <p>
  * See also the <tt>jcifs.smb.client.logonShare</tt> property.
  */
@@ -328,7 +322,8 @@ synchronized (transport()) {
     
                         if( response.isLoggedInAsGuest &&
                                     "GUEST".equalsIgnoreCase( auth.username ) == false &&
-                                    transport.server.security != SmbConstants.SECURITY_SHARE) {
+                                    transport.server.security != SmbConstants.SECURITY_SHARE &&
+                                    auth != NtlmPasswordAuthentication.ANONYMOUS) {
                             throw new SmbAuthException( NtStatus.NT_STATUS_LOGON_FAILURE );
                         }
     

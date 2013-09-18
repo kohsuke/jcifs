@@ -192,6 +192,8 @@ public final class NtlmPasswordAuthentication implements Principal, Serializable
     }
     public static byte[] nTOWFv1(String password)
     {
+        if (password == null)
+            throw new RuntimeException("Password parameter is required");
         try {
             MD4 md4 = new MD4();
             md4.update(password.getBytes(SmbConstants.UNI_ENCODING));
@@ -328,15 +330,17 @@ public final class NtlmPasswordAuthentication implements Principal, Serializable
     public NtlmPasswordAuthentication( String domain, String username, String password ) {
         int ci;
 
-        ci = username.indexOf('@');
-        if (ci > 0) {
-            domain = username.substring(ci + 1);
-            username = username.substring(0, ci);
-        } else {
-            ci = username.indexOf('\\');
+        if (username != null) {
+            ci = username.indexOf('@');
             if (ci > 0) {
-                domain = username.substring(0, ci);
-                username = username.substring(ci + 1);
+                domain = username.substring(ci + 1);
+                username = username.substring(0, ci);
+            } else {
+                ci = username.indexOf('\\');
+                if (ci > 0) {
+                    domain = username.substring(0, ci);
+                    username = username.substring(ci + 1);
+                }
             }
         }
 

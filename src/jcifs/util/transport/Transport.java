@@ -198,6 +198,8 @@ public abstract class Transport implements Runnable {
         }
     }
     public synchronized void disconnect( boolean hard ) throws IOException {
+        IOException ioe = null;
+
         switch (state) {
             case 0: /* not connected - just return */
                 return;
@@ -207,7 +209,11 @@ public abstract class Transport implements Runnable {
                 if (response_map.size() != 0 && !hard) {
                     break; /* outstanding requests */
                 }
-                doDisconnect( hard );
+                try {
+                    doDisconnect( hard );
+                } catch (IOException ioe0) {
+                    ioe = ioe0;
+                }
             case 4: /* in error - reset the transport */
                 thread = null;
                 state = 0;
@@ -219,6 +225,9 @@ public abstract class Transport implements Runnable {
                 state = 0;
                 break;
         }
+
+        if (ioe != null)
+            throw ioe;
     }
     public void run() {
         Thread run_thread = Thread.currentThread();
@@ -240,7 +249,8 @@ public abstract class Transport implements Runnable {
                      * doConnect returned too late, just ignore.
                      */
                     if (ex0 != null) {
-                        ex0.printStackTrace();
+                        if (log.level >= 2)
+                            ex0.printStackTrace(log);
                     }
                     return;
                 }

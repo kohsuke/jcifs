@@ -298,7 +298,7 @@ public final class NbtAddress {
         addr = getCachedAddress( name );
 
         if( addr == null ) {
-            /* This was copied amost verbatim from InetAddress.java. See the
+            /* This is almost exactly like InetAddress.java. See the
              * comments there for a description of how the LOOKUP_TABLE prevents
              * redundant queries from going out on the wire.
              */

@@ -1,3 +1,78 @@
+Tue Oct 18 15:10:23 EDT 2011
+jcifs-1.3.17
+
+The jcifs.smb.client.soTimeout property, which controls how long the
+client will wait to read data from a server, was broken in the previous
+release (1.3.16). Not only was it broken but no SO_TIMEOUT was specified
+at all meaning if a server became unresponive, JCIFS could hang for
+an uncontrollably long time. This behavior of this property has been
+restored.
+
+Additionally, a new jcifs.smb.client.connTimeout has been added which
+specifies the number of milliseconds that the client will wait to
+connect to a server (how long it will wait for a response to the TCP
+SYN). This can be very useful when trying to communicate with many
+servers in parallel.
+
+Sat Jun 25 12:00:00 EDT 2011
+jcifs-1.3.16
+
+This release includes the following minor fixes and improvements:
+
+  * JCIFS now uses the InetSocketAddress class to explicitly bind and
+  set the SO_TIMEOUT on client sockets before they are connected. This
+  makes the SO_TIMEOUT effective when the target server socket is not
+  listening and the client OS socket implementation takes a long time
+  for the dropped SYN to timeout. This may significantly reduce resource
+  consumption in applications that use multiple threads to constantly
+  query servers that may not be listening.
+
+  * When disconnecting a transport, new clauses have been added to better
+  reset transport state whereas previously transports could get stuck
+  in a disconnected state for unnecessarily long periods of time.
+
+  * A new property jcifs.smb.client.ignoreCopyToException has been
+  added. When set to "true" (the default), the SmbFile.copyTo() method
+  will ignore (but log) exceptions trying to copy individual files or
+  directories (such as because of a permissions error). To maintain
+  backward compatibility, the default value of this property is "true"
+  (exceptions are ignored). Setting this property to "false" will cause
+  any exception that occurs trying to copy an individual file or directory
+  to be thrown out of copyTo and abort the copy operation at the point
+  of failure.
+
+  * If an authentication exception occurs trying to connect to a server
+  that has multiple IP addresses, JCIFS will not attempt to connect
+  to more than one IP addresses because doing so could result in an
+  account lockout.
+
+  * The SID resolver code incorrectly resolved SIDs of an ACE in blocks
+  of at most 10 where it should have used a limit of 64. This performance
+  issue has been fixed.
+
+  * JCIFS will not throw the artifical "Access is denied" error if the
+  special NtlmPasswordCredential.ANONYMOUS credential is used explicitly
+  (whereas normally JCIFS will deliberately throw an SmbAuthException if
+  a login results in a guest login or if the anonymous identity is used).
+
+  * The NetrServerEnum2 RAP call used incorrect parameter descriptiors
+  which could result in "SmbException: 2320" errors trying to list
+  domains and servers from the local NetBIOS browse service.
+
+  * The NTLMSSP AUTHENTICATE_MESSAGE (aka "Type 2 Message") encoding
+  routine incorrectly left out the TargetName field (although this had
+  no effect on CIFS client behavior).
+
+Thu Oct  7 13:36:57 EDT 2010
+jcifs-1.3.15
+
+Adjusted locking on DcerpcHandle routines in jcifs.smb.SID which could
+result in "All pipe instances are busy". This is also believed to reduce
+occurances of NT_STATUS_TOO_MANY_OPENED_FILES errors (although when
+resolving SID names excessively, this error can still occur).
+
+Fragmented request PDUs have been implemented.
+
 Thu Feb 11 15:10:26 EST 2010
 jcifs-1.3.14
 

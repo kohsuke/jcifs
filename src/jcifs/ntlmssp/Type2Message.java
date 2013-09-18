@@ -231,17 +231,13 @@ public class Type2Message extends NtlmMessage {
             byte[] targetInformation = getTargetInformation();
             int flags = getFlags();
             byte[] target = new byte[0];
-            if ((flags & (NTLMSSP_TARGET_TYPE_DOMAIN |
-                    NTLMSSP_TARGET_TYPE_SERVER |
-                            NTLMSSP_TARGET_TYPE_SHARE)) != 0) {
+            if ((flags & NTLMSSP_REQUEST_TARGET) != 0) {
                 if (targetName != null && targetName.length() != 0) {
                     target = (flags & NTLMSSP_NEGOTIATE_UNICODE) != 0 ?
                             targetName.getBytes(UNI_ENCODING) :
                             targetName.toUpperCase().getBytes(getOEMEncoding());
                 } else {
-                    flags &= (0xffffffff ^ (NTLMSSP_TARGET_TYPE_DOMAIN |
-                            NTLMSSP_TARGET_TYPE_SERVER |
-                                    NTLMSSP_TARGET_TYPE_SHARE));
+                    flags &= (0xffffffff ^ NTLMSSP_REQUEST_TARGET);
                 }
             }
             if (targetInformation != null) {
