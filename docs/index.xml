@@ -17,10 +17,26 @@ JCIFS is an <a href="http://www.opensource.org/docs/definition_plain.php">Open S
 </entry-->
 
 <entry>
+<title>jcifs-1.3.18 released / Minor Fixes</title>
+<sub>posted by Mike, October 29, 2014</sub>
+<desc>
+This release includes minor fixes such as for a <code>ConcurrentModificationException</code> that could occur when initializing JCIFS classes.
+</desc>
+</entry>
+
+<entry old="true">
+<title>jcifs-krb5-1.3.17 released / Kerberos Package Update</title>
+<sub>posted by Mike, November 11, 2011</sub>
+<desc>
+The Kerberos package been updated to 1.3.17. Special thanks to Mr. Shun for contributing this package.
+</desc>
+</entry>
+
+<entry>
 <title>jcifs-1.3.17 released / SO_TIMEOUT Fixed, Connect Timeout Control Added</title>
 <sub>posted by Mike, October 18, 2011</sub>
 <desc>
-The <code>jcifs.smb.client.soTimeout</code> property, which controls how long the client will wait to read data from a server, was broken in the previous release (1.3.16). Not only was it broken but no SO_TIMEOUT was specified at all meaning if a server became unresponive, JCIFS could hang for an uncontrollably long time. This behavior of this property has been restored.
+The <code>jcifs.smb.client.soTimeout</code> property, which controls how long the client will wait to read data from a server, was broken in the previous release (1.3.16). Not only was it broken but no SO_TIMEOUT was specified at all meaning if a server became unresponsive, JCIFS could hang for an uncontrollably long time. This behavior of this property has been restored.
 <p/>
 Additionally, a new <code>jcifs.smb.client.connTimeout</code> has been added which specifies the number of milliseconds that the client will wait to connect to a server (how long it will wait for a response to the TCP SYN). This can be very useful when trying to communicate with many servers in parallel.
 </desc>
@@ -61,7 +77,7 @@ The JCIFS Team would like to thank IOPLEX Software for contributing to this work
 <desc>
 Minor adjustments have been applied to DcerpcHandle locking routines in the SID class to fix sporadic occurances of "All pipe instances are busy" errors under high load.
 <p/>
-The JCIFS Team would like to thank <a href="http://vivisimo.com/">Vivísimo, Inc.</a> for supporting this work. Vivísimo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Vivísimo offers Clusty.com.
+The JCIFS Team would like to thank Vivísimo, Inc. for supporting this work. Vivísimo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Vivísimo offers Clusty.com.
 </desc>
 </entry>
 
@@ -80,7 +96,7 @@ JCIFS will no longer do a NetBIOS Node Status to determine the server hostname b
 Locking throughout the transport layer has been rewritten. This should fix the long standing deadlock that has been reported in the past. Note that these are significant changes to the I/O layer. The package should be tested carefully before being deployed.
 <p/>The size of the transient input buffer used to read the SMB_COM_NEGOTIATE response has been doubled to accommodate a security blob (as observed with OSX Snow Leopard). A signing issue reading data from an EMC server has been fixed. NTLMSSP logging has been improved.
 <p/>
-The JCIFS Team would like to thank <a href="http://www.stone-ware.com/">Stoneware, Inc.</a> for supporting this work. Stoneware, Inc. provides innovative software that enables organizations to build their own 'private' cloud for simplified access to all of their web, Windows or hosted applications and services.
+The JCIFS Team would like to thank Stoneware, Inc. for supporting this work. Stoneware, Inc. provides innovative software that enables organizations to build their own 'private' cloud for simplified access to all of their web, Windows or hosted applications and services.
 </desc>
 </entry>
 
@@ -149,11 +165,11 @@ All instances of UnicodeLittleUnmarked have been changed to UTF-16LE (for platfo
 </li>
 </ul>
 <p/>
-The JCIFS Team would like to thank <a href="http://www.metacarta.com/">MetaCarta, Inc.</a> for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
+The JCIFS Team would like to thank MetaCarta, Inc. for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.3.8 released / RC4 Implemented, Java 1.4 Now Supported Again</title>
 <sub>posted by Mike, Mar 29, 2009</sub>
 <desc>
@@ -161,7 +177,7 @@ RC4 has been implemented and therefore JCIFS no longer requires Java 1.5 update 
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.3.7 released / Share Security Fixed</title>
 <sub>posted by Mike, Mar 18, 2009</sub>
 <desc>
@@ -169,7 +185,7 @@ Share security was broken in both 1.2 and 1.3. It has been fixed. Note that shar
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.3.5 released / Stand-alone DFS with IP Address Hostname Issue Fixed</title>
 <sub>posted by Mike, Mar 12, 2009</sub>
 <desc>
@@ -179,7 +195,7 @@ The JCIFS Team would like to thank Vivísimo, Inc. for supporting this work. Viv
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.3.4 released / Parameter Words, Status Codes and Minor Fixes</title>
 <sub>posted by Mike, Mar 9, 2009</sub>
 <desc>
@@ -187,7 +203,7 @@ This release includes some minor protocol adjustments and the addition of some m
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.3.3 released / NTLMv2 Requirements, "Invalid parameter" Error, and NetBIOS Broadcast Lookup Timeouts</title>
 <sub>posted by Mike, Jan 25, 2009</sub>
 <desc>
@@ -201,7 +217,7 @@ The NTLMSSP code would not fallback to ASCII if Cp850 was not available (which i
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-krb5-1.3.1 released / Kerberos 5 Package Updated</title>
 <sub>posted by Mike, Dec 22, 2008</sub>
 <desc>
@@ -209,7 +225,7 @@ The Kerberos package been updated to 1.3.1. The KerberosAuthExample.java example
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.3.2 released / Samba DFS</title>
 <sub>posted by Mike, Dec 22, 2008</sub>
 <desc>
@@ -217,7 +233,7 @@ Accessing a DFS link on Samba directly could result in an error. This issue has 
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.3.1 released / NTLM HTTP Filter Fixed, DFS Adjustments and More</title>
 <sub>posted by Mike, Nov 30, 2008</sub>
 <desc>
@@ -241,7 +257,7 @@ The JCIFS Team would like to thank MetaCarta, Inc. for supporting this work. Met
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.2.25 released / ArrayIndexOutOfBoundsException, copyTo and IBM iSeries Fixes</title>
 <sub>posted by Mike, Oct 20, 2008</sub>
 <desc>
@@ -305,7 +321,7 @@ The JCIFS Team would like to thank MetaCarta, Inc. for supporting this work. Met
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.2.18 released / DCERPC, Robust Recovery, URL Decoding, NPEs and Much More</title>
 <sub>posted by Mike, Feb 18, 2008</sub>
 <desc>
@@ -347,7 +363,7 @@ IOPLEX Software's Plexcel extension for PHP provides unmatched integration with 
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>Alfresco releases Java CIFS server under GPL</title>
 <sub>posted by Mike, Nov 2, 2007</sub>
 <desc>
@@ -366,7 +382,7 @@ A try / catch clause that was accidentally introduced in a previous release has 
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.2.16 released / Domain-Based DFS Support</title>
 <sub>posted by Mike, Aug 2, 2007</sub>
 <desc>
@@ -378,7 +394,7 @@ The JCIFS Team would like to thank MetaCarta, Inc. for supporting this work. Met
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-1.2.15 released / NetApp Compatibility, SMB signing with DFS and More</title>
 <sub>posted by Mike, Jul 16, 2007</sub>
 <desc>
@@ -393,7 +409,7 @@ This release includes some significant changes. Most of these changes are relate
 <li>A minor performance flaw in the DCERPC code was found and fixed.</li>
 </ul>
 <p/>
-The JCIFS Team would like to thank <a href="http://www.simple-groupware.de/">Simple Groupware Solutions</a> and the Leibniz Computing Centre Munich (LRZ) for supporting this work.
+The JCIFS Team would like to thank Simple Groupware Solutions and the Leibniz Computing Centre Munich (LRZ) for supporting this work.
 <p/>
 The JCIFS Team would like to thank Vivísimo, Inc. for supporting this work. Vivísimo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Vivísimo offers Clusty.com.
 </desc>
@@ -405,11 +421,11 @@ The JCIFS Team would like to thank Vivísimo, Inc. for supporting this work. Viv
 <desc>
 A new <tt>SID.getGroupMemberSids()</tt> method has been added that will return the local group membership of SID (aka it's aliases). The SAMR interface has been added to the dcerpc code with the <tt>SamrEnumerateAliasesInDomain</tt> RPC and numerous other calls necessary to negotiate the various handles.
 <p/>
-The JCIFS Team would like to thank <a href="http://vivisimo.com/">Vivísimo, Inc.</a> for supporting this work. Vivísimo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Vivísimo offers Clusty.com.
+The JCIFS Team would like to thank Vivísimo, Inc. for supporting this work. Vivísimo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Vivísimo offers Clusty.com.
 </desc>
 </entry>
 
-<entry>
+<entry old="true">
 <title>jcifs-krb5-1.2.13 released / Kerberos Authentication Support Update</title>
 <sub>posted by Mike, Feb 8, 2007</sub>
 <desc>
@@ -427,7 +443,7 @@ Great thanks again to Mr. Shun from Japan for contributing this work.
 <desc>
 A new <tt>SmbFile.getShareSecurity()</tt> method that uses a new <tt>MsrpcShareGetInfo/ShareInfo502</tt> RPC has been added. This will return the ACL for a share as opposed to the ACL for the directory shared. See the API documentation for details. Several DFS issues have been identified and fixed. If JCIFS receives a <tt>NoRouteToHostException</tt> on port 445 it will now try to fallback to port 139. This code has been tested fairly well already. There have been no changes since b4.
 <p/>
-The JCIFS Team would like to thank <a href="http://www.metacarta.com/">MetaCarta, Inc.</a> for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
+The JCIFS Team would like to thank MetaCarta, Inc. for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
 </desc>
 </entry>
 
@@ -449,7 +465,7 @@ The <tt>toString()</tt> method of the SID class has been changed back to the old
 <desc>
 The 1.2.11 release is now final. No serious problems have been reported with the new SID resolution code however some minor adjustments have been made with respect to values returned when a SID has not been resolved (e.g. the associated account was deleted). The SID class API documentation has been updated accordingly.
 <p/>
-The JCIFS Team would like to thank <a href="http://vivisimo.com/">Vivísimo, Inc.</a> for supporting this work. Vivísimo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Vivísimo offers Clusty.com.
+The JCIFS Team would like to thank Vivísimo, Inc. for supporting this work. Vivísimo provides enterprises with innovative search solutions to find, access, and manipulate all content. For consumer web searches, Vivísimo offers Clusty.com.
 </desc>
 </entry>
 
@@ -477,7 +493,7 @@ The midlc MIDL compatible IDL compiler has been updated to emit stubs for the ne
 <desc>
 The 1.2.10 release is now final. A NetBIOS name service lookup bug has been fixed in addition to several other harmless adjustments.
 <p/>
-The JCIFS Team would like to thank <a href="http://www.metacarta.com/">MetaCarta, Inc.</a> for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
+The JCIFS Team would like to thank MetaCarta, Inc. for supporting this work. MetaCarta, Inc., a provider of geographic intelligence solutions, offers users map-driven geographic search, geographic referencing, and data visualization capabilities.
 </desc>
 </entry>
 

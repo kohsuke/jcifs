@@ -139,7 +139,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 		<small>
 		Last updated <xsl:value-of select="$date"/><BR/>
 		<xsl:value-of select="$lib"/><BR/>
-		Copyright &#169; 2010 <xsl:value-of select="$copyright"/><BR/>
+		Copyright &#169; 2014 <xsl:value-of select="$copyright"/><BR/>
 		<a href="http://validator.w3.org/check/referer" style="color: black;">validate this page</a>
 		</small>
 	</TD></TR></TABLE>
