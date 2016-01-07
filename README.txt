@@ -1,3 +1,16 @@
+Wed Oct 29 21:08:01 EDT 2014
+jcifs-1.3.18
+
+This release includes mostly minor fixes including:
+System.getProperties().clone() modified to prevent
+ConcurrentModificationException when loading classes.
+A logical check has been added to prevent a NullPointerException.
+Reset tree if transport disconnected.
+DCERPC error message improved.
+
+Note: There are several other bugs that have been discussed on the
+mailing list that have not been fixed in this release.
+
 Tue Oct 18 15:10:23 EDT 2011
 jcifs-1.3.17
 

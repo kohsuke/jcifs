@@ -222,6 +222,13 @@ abstract class NameServicePacket {
 
         addrEntry = new NbtAddress[rDataLength / 6];
         end = srcIndex + rDataLength;
+/* Apparently readRDataWireFormat can return 0 if resultCode != 0 in
+which case this will look indefinitely. Putting this else clause around
+the loop might fix that. But I would need to see a capture to confirm.
+if (resultCode != 0) {
+    srcIndex += rDataLength;
+} else {
+*/
         for( addrIndex = 0; srcIndex < end; addrIndex++ ) {
             srcIndex += readRDataWireFormat( src, srcIndex );
         }

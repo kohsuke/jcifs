@@ -48,7 +48,7 @@ import java.util.Date;
  * directory. SmbFile URLs have the following syntax:
  *
  * <blockquote><pre>
- *     smb://[[[domain;]username[:password]@]server[:port]/[[share/[dir/]file]]][?[param=value[param2=value2[...]]]
+ *     smb://[[[domain;]username[:password]@]server[:port]/[[share/[dir/]file]]][?param=value[param2=value2[...]]]
  * </pre></blockquote>
  *
  * This example:
@@ -939,9 +939,12 @@ int addressIndex;
  * <tt>URLConnection</tt> implementation of <tt>connect()</tt>.
  */
     public void connect() throws IOException {
-        SmbTransport trans;
-        SmbSession ssn;
-        UniAddress addr;
+        if (isConnected() && tree.session.transport.tconHostName == null) {
+            /* Tree thinks it is connected but transport disconnected
+             * under it, reset tree to reflect the truth.
+             */
+            tree.treeDisconnect(true);
+        }
 
         if( isConnected() ) {
             return;

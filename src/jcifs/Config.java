@@ -160,7 +160,7 @@ public static int socketCount = 0;
             prp.load( in );
         }
         try {
-            prp.putAll( System.getProperties() );
+            prp.putAll( (java.util.Map)System.getProperties().clone() );
         } catch( SecurityException se ) {
             if( log.level > 1 )
                 log.println( "SecurityException: jcifs will ignore System properties" );

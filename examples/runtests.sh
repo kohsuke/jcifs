@@ -2,17 +2,17 @@
 
 JAVA_HOME=/usr/local/java5
 CLASSPATH=../build:.
-PROPERTIES=../../user2.prp
+PROPERTIES=../../bcarter.prp
 RUN="${JAVA_HOME}/bin/java -cp ${CLASSPATH} -Djcifs.properties=${PROPERTIES}"
 
 #SERVER=192.168.15.110
-SERVER=dc1.w.net
+SERVER=dc08.busico.local
 SHARE=tmp
 DIR=test
 
 # Domain-based DFS
 #SERVER=192.168.15.110
-#SERVER=w.net
+#SERVER=busico.local
 #SHARE=root2
 #DIR=test
 
@@ -35,11 +35,11 @@ URL_WRITE_DIR=${URL_SHARE}${WRITE_DIR}
 
 set -x
 
-$RUN SidLookup dc1.w.net S-1-5-21-2779991279-2625083122-3494051191-1361
+$RUN SidLookup dc08.busico.local S-1-5-21-2779991279-2625083122-3494051191-1361
 $RUN TestGetParent 'smb://'
 $RUN TestGetParent ${URL_WRITE_DIR}
-$RUN TestListLoop 'smb://dc5.w.net/tmp/' 2
-$RUN TestCopy smb://fs1.w.net/tmp/xxx/ smb://dc5.w.net/tmp/deleteme/
+$RUN TestListLoop 'smb://dc08.busico.local/tmp/' 2
+$RUN TestCopy smb://dc08.busico.local/tmp/xxx/ smb://dc08.busico.local/tmp/deleteme/
 $RUN ListFiles smb://
 $RUN ListFiles smb://192.168.15.110/tmp/
 $RUN ListACL ${URL_WRITE_DIR}
